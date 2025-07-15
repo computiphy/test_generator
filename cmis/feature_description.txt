@@ -1,0 +1,1127 @@
+1
+Page 16h is an optional Page supporting the optional Network Path (NP) functionality that is required for 2 multiplex or uniplex client encapsulation applications. 3
+Concept and functionality of Network Paths and NP Applications is described in section 7.6. 4
+The module advertises support of Page 16h (and Page 17h) in Bit 01h:142.7 (see Table 8-41). 5
+Page 16h may optionally be Banked. Each Bank of Page 16h refers to 8 lanes. 6
+Page 16h is subdivided in subject areas as illustrated in the following table: 7
+Table 8-124 Page 16h Overview 8
+Byte
+Size (bytes)
+Subject Area
+Description
+128-159
+32
+Provisioning
+128-135
+8
+NP Staged Control Set 0
+Lane to NP Assignments Provisioning – Staged Control Set 0
+136-143
+8
+NP Staged Control Set 1
+Lane to NP Assignments Provisioning – Staged Control Set 1
+144-159
+16
+-
+Reserved[16]
+160-175
+16
+Control
+160
+1
+NP Control
+Network Path initialization control
+161
+1
+-
+Reserved[1]
+162-163
+2
+NP Source Selectors
+Signal source selection at the Network Path connection points
+164-175
+12
+-
+Reserved[12]
+176-191
+16
+Command & Response
+176
+1
+NP Apply SCS 0
+Apply command for NP Staged Control Set 0
+177
+1
+NP Apply SCS 1
+Apply command for NP Staged Control Set 1
+178-181
+4
+Configuration Status
+Status of most recent Network Path configuration command
+182-191
+10
+-
+Reserved[10]
+192-223
+32
+Status
+192-199
+8
+NP Active Control Set
+Provisioned Network Path Configuration
+200-203
+4
+Network Path Status
+Network Path State Machine state of each NP media lane
+204
+1
+NPInitPending Condition
+Commissioning status (NPInitPending condition)
+205-223
+19
+-
+Reserved[19]
+224-255
+32
+Advertisement
+224-225
+2
+NPSM Max Durations
+Maximum durations for all NPSM transient states
+226
+1
+Options
+Miscellaneous options
+227
+1
+-
+Reserved[1]
+228-247
+20
+Mixed Multiplex Support
+Advertising for mixed HP multiplexing support
+248-249
+2
+Application Advertisement
+Application Advertisement Extensions
+250-255
+6
+-
+Reserved[4]
+9
+OIF-CMIS-05.2
+www.oiforum.com Page 224
+8.15.1 Network Path Provisioning 1
+Network Path Provisioning fields allow the host to provision Network Paths into NP Active Control Sets, for 2 subsequent commissioning into module hardware when the NP transits through the NPInit state of the NPSM. 3
+Note: See sections 6.2.3 and 6.2.4 for the core concepts and procedures of provisioning and commissioning 4 Data Paths, which are very similar to those defined here (and in section 7.6.5), for Network Paths. 5
+There are two NP Staged Control Sets (see Table 8-126 and Table 8-127), both offering the same provisioning 6 fields, allowing the host to prepare two different configurations to be provisioned on demand. 7
+Parallel Network Paths can be provisioned when there are no host lane conflicts and when each NP carries one 8 of the multiplex or uniplex NP Applications advertised by the module in the Application Descriptor registers (see 9 Table 8-20, Table 8-52, and Table 8-53) and its extension (see Table 8-140), and in the Mixed Multiplex 10 Advertisement registers (see Table 8-142 and Table 8-143). 11
+Note: See sections 7.6.4 and 8.15.5. for more information about NP Application advertising. 12
+Provisioning the Data Path of an NP Application with one Network Path serving a number N of Host Paths also 13 requires provisioning the N Host Paths (using the Data Path configuration mechanisms). The AppSel fields of 14 all Host Paths must refer to (partial) Application Descriptors that all advertise the same media interface ID, with 15 throughput larger than the sum of the N host interface IDs associated with the N Data Paths. 16
+The host provisions the NP configuration prepared in an NP Staged Control Set by writing to the Apply Trigger 17 register of the relevant NP Staged Control Set (see Table 8-130 and Table 8-131), which triggers execution of 18 a command to update the NP Active Control Set (see Table 8-134). 19
+Note: The NPID of all lanes belonging to host paths of the NP Application Data Path must be identical because 20 they are all part of the same NP Application Data Path, and the NPInUse field of all those lanes must be set. 21
+The mechanism and command handling protocol to trigger execution of a provisioning command is fully 22 analogous to the configuration of Data Paths or Host Paths (see section 6.2.3.3). However, intentionally only 23 step by step configuration is supported (there is no NP ApplyImmediate trigger register) 24
+The actual commissioning of a provisioned NP configuration into hardware occurs after the host initiated state 25 transition of the NPSM from NPDeactivated to NPInit, in the NPInit state. 26
+Table 8-125 Network Path Provisioning per Lane (NPConfigLane<i>) 27
+Lane
+Bits
+Field Name
+Register Description
+Type
+<i>
+7-4
+-
+Reserved
+RW
+Rqd.
+3-1
+NPID
+SCS<k>::NPIDLane<i>
+If host lane <i> feeds the Network Path of an NP Application instance, the NPIDLane<i> field stores the Network Path ID of that Network Path, which is defined as the number of the first host lane feeding the Network Path, decremented by one.
+If lane<i> is unused (NPInUseLane<i> = 0), the value of NPIDLane<i> is ignored.
+Note: All lanes of the Network Path of an Application that spans multiple host lanes have the same NPID.
+Note: For example, the NPID of a Network Path carrying the HP of host lane 1 is 0 and the NPID of a NP where host lane 5 is the lowest lane number feeding the NP is 4.
+0
+NPInUse
+SCS<k>::NPInUseLane<i>
+0b: host lane <i> is either part of the Data Path of a DP Application or it is unused
+1b: host lane <i> is part of a Host Path that feeds the Network Path identified by the NPID field in a NP Application
+28
+OIF-CMIS-05.2
+www.oiforum.com Page 225
+Table 8-126 Staged Control Set 0, Network Path Configuration (Page 16h) 1
+Byte
+Bits
+Field Name
+Register Description
+Type
+128
+7-4
+-
+SCS0::NPConfigLane1
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane1
+0
+NPInUseLane1
+129
+7-4
+-
+SCS0::NPConfigLane2
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane2
+0
+NPInUseLane2
+130
+7-4
+-
+SCS0::NPConfigLane3
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane3
+0
+NPInUseLane3
+131
+7-4
+-
+SCS0::NPConfigLane4
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane4
+0
+NPInUseLane4
+132
+7-4
+-
+SCS0::NPConfigLane5
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane5
+0
+NPInUseLane5
+133
+7-4
+-
+SCS0::NPConfigLane6
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane6
+0
+NPInUseLane6
+134
+7-4
+-
+SCS0::NPConfigLane7
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane7
+0
+NPInUseLane7
+135
+7-4
+-
+SCS0::NPConfigLane8
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane8
+0
+NPInUseLane8
+Table 8-127 Staged Control Set 1, Network Path Configuration (Page 16h) 2
+Byte
+Bits
+Field Name
+Register Description
+Type
+136
+7-4
+-
+SCS1::NPConfigLane1
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane1
+0
+NPInUseLane1
+137
+7-4
+-
+SCS1::NPConfigLane2
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane2
+0
+NPInUseLane2
+138
+7-4
+-
+SCS1::NPConfigLane3
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane3
+0
+NPInUseLane3
+139
+7-4
+-
+SCS1::NPConfigLane4
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane4
+0
+NPInUseLane4
+140
+7-4
+-
+SCS1::NPConfigLane5
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane5
+0
+NPInUseLane5
+141
+7-4
+-
+SCS1::NPConfigLane6
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane6
+0
+NPInUseLane6
+142
+7-4
+-
+SCS1::NPConfigLane7
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane7
+0
+NPInUseLane7
+143
+7-4
+-
+SCS1::NPConfigLane8
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane8
+0
+NPInUseLane8
+3
+OIF-CMIS-05.2
+www.oiforum.com Page 226
+8.15.2 Network Path Control 1
+The operational status of the provisioned Network Paths (see the NP Active Control Set described in section 2 8.15.4) is determined by the content of the NPDeinit register. 3
+The NPDeinit register controls the initialization of the media lanes in all configured Network Paths that are 4 associated with the 8 lanes represented in a Bank. 5
+The module evaluates the NPDeinit register only in the fully operational Module State ModuleReady. When the 6 Module State is ModuleReady, the Network Path associated with lanes whose NPDeinit bits are cleared will 7 transition to the NPInit state and begin the media lane initialization process. 8
+Note: By default, all configured Network Paths will begin initializing when the Module State reaches 9 ModuleReady. The host can prevent this auto-initialization behavior by setting the NPDeinit bits while the 10 module is in the ModuleLowPwr state. 11
+At time of initialization (commissioning), the multiplex structure of the NP application must be provisioned in 12 the Active Control set, in terms of HP definitions, but the HPs can be in any achievable DPSM state. 13
+Parallel Network Paths are mutually independent. They may be initialized or deinitialized by one command or 14 by a sequence of commands. 15
+Table 8-128 Network Path Initialization Control (Page 16h) 16
+Byte
+Bits
+Field Name
+Register Description
+Type
+160
+7
+NPDeinitLane8
+NPDeinitLane<i>
+Initialization control for the Network Path fed by host lane <i>
+0b: Initialize the Network Path associated with host lane <i>
+1b: Deinitialize the Network Path associated with host lane <i>
+All host lanes feeding one Network Path must have the same NPDeinitLane<i> value set
+Note: These bits represent static requests, not trigger events
+RW Rqd.
+6
+NPDeinitLane7
+5
+NPDeinitLane6
+4
+NPDeinitLane5
+3
+NPDeinitLane4
+2
+NPDeinitLane3
+1
+NPDeinitLane2
+0
+NPDeinitLane1
+17
+Supporting configurable client replacement signal data insertion in Tx direction at NP inputs from HP outputs, 18 replacing received host signal data to be mapped into NP inputs, is optional and hence advertised. 19
+Supporting configurable client replacement signal insertion in Rx direction at HP inputs from NP outputs, 20 replacing received and demapped host signal data of NP outputs, is optional and hence advertised. 21
+Note: It is assumed that the pertinent specifications of an NP application specify well defined consequent actions 22 for the case when no valid host signal is available to be forwarded. The default configuration is therefore to 23 forward the received signal or the signal resulting from a consequent action, as this allows for intervention-free 24 power up. See section 7.6.1.2 and 8.15.5.2 for more information on client replacement signals 25
+Table 8-129 Network and Host Path Signal Source Selection (Page 16h) 26
+Byte
+Bits
+Field Name
+Register Description
+Type
+162
+7
+HPSourceRx8
+HPSourceRx<i>
+Controls the signal source feeding host lane <i> in Rx direction
+0b: Signal received from Network Path
+1b: Internally generated client replacement signal
+All host lanes belonging to the same HP must have the same HPSourceRx<i> value set
+Advertisement: 16h:226.0
+RW Cond.
+6
+HPSourceRx7
+5
+HPSourceRx6
+4
+HPSourceRx5
+3
+HPSourceRx4
+2
+HPSourceRx3
+1
+HPSourceRx2
+0
+HPSourceRx1
+163
+7
+NPSourceTx8
+NPSourceTx<i>
+Controls the signal source feeding the Network Path input related to the HP containing host lane <i>
+0b: Signal received from Host Path
+1b: Internally generated client replacement signal
+All host lanes belonging to the same HP must have the same NPSourceTx<i> value set
+Advertisement: 16h:226.1
+RW Cond.
+6
+NPSourceTx7
+5
+NPSourceTx6
+4
+NPSourceTx5
+3
+NPSourceTx4
+2
+NPSourceTx3
+1
+NPSourceTx2
+0
+NPSourceTx1
+OIF-CMIS-05.2
+www.oiforum.com Page 227
+8.15.3 Network Path Commands 1
+Triggering the execution of a command to provision a configuration prepared in an NP Staged Control Set into 2 the NP Active Control Set by writing to an ApplyNPInit trigger register and the associated command handling 3 protocol using the NPConfigStatus status register is fully analogous to DP command handling for Data Paths 4 described in section 6.2.4. 5
+The ApplyNPInit trigger register allows the host to trigger the execution of the Network Path provisioning or re-6 provisioning commands for the lanes selected via the lane bit mask in the value written to the trigger register. 7
+Note: Unlike the name might suggest, writing to ApplyNPInit causes a provisioning step to be executed but 8 does not itself cause the NPInit state to be entered, as this step is governed by the NPSM. 9
+Note: The ApplyNPInit register is a stateless trigger registers with write-only access type. This implies that the 10 value read from the register is not specified. Modules may use the bits in these registers for any purpose, 11 including to signal command execution or acceptance status, e.g. for debug purposes. 12
+Command acceptance: The module (silently) ignores a set trigger bit for lanes where execution of a 13 previously triggered provisioning command is still in progress, as indicated in the associated NPConfigStatus 14 field. Conversely, when the module accepts a triggered command for a lane, it immediately sets the 15 NPConfigStatus field of that lane to ConfigInProgress. 16
+Command validation: After setting ConfigInProgress, the module first validates the configuration to be 17 provisioned. 18
+Note: Full multiplex structure validation at time of provisioning may be difficult if not impossible for the module 19 because Host Path provisioning and Network Path provisioning are separate steps with undefined order. 20
+Command execution: After successful validation and after subsequent successful copy from the relevant NP 21 Staged Control Set to the NP Active Control Set, the module sets the bits of the provisioned lanes in the 22 NPInitPending register, indicating that the commissioning of the NP Active Control Set during the NPInit state 23 is still outstanding. 24
+Command termination: Finally the module updates the NPConfigStatus. 25
+Table 8-130 Staged Control Set 0, Apply Triggers (Page 16h) 26
+Byte
+Bits
+Field Name
+Register Description
+Type
+176
+7
+ApplyNPInitLane8
+SCS0::ApplyNPInitLane<i>
+0b: No action for host lane <i>
+1b: Trigger the Provision procedure using the NP Staged Control Set 0 settings for host lane <i>, with feedback provided in the associated NPConfigStatusLane<i> field
+Restriction: This byte must be written in a single-byte WRITE
+WO
+Rqd.
+6
+ApplyNPInitLane7
+5
+ApplyNPInitLane6
+4
+ApplyNPInitLane5
+3
+ApplyNPInitLane4
+2
+ApplyNPInitLane3
+1
+ApplyNPInitLane2
+0
+ApplyNPInitLane1
+27
+Table 8-131 Staged Control Set 1, Apply Triggers (Page 16h) 28
+Byte
+Bits
+Field Name
+Register Description
+Type
+177
+7
+ApplyNPInitLane8
+SCS1::ApplyNPInitLane<i>
+0b: No action for host lane <i>
+1b: Trigger the Provision procedure using the NP Staged Control Set 0 settings for host lane <i>, with feedback provided in the associated NPConfigStatusLane<i> field
+Restriction: This byte must be written in a single-byte WRITE
+WO
+Rqd.
+6
+ApplyNPInitLane7
+5
+ApplyNPInitLane6
+4
+ApplyNPInitLane5
+3
+ApplyNPInitLane4
+2
+ApplyNPInitLane3
+1
+ApplyNPInitLane2
+0
+ApplyNPInitLane1
+29
+The NPConfigStatus register provides feedback on the command handling status (in-progress, ready) and 30 the result status (success, rejection due to validation failure) 31
+OIF-CMIS-05.2
+www.oiforum.com Page 228
+Table 8-132 NP Configuration Command Status registers (Page 16h) 1
+Byte
+Bit
+Field Name
+Field Description
+Type
+178
+7-4
+NPConfigStatusLane2
+NPConfigStatusLane<i>
+Provisioning Command Execution / Result Status for the Network Path of host lane <i>, during and after the most recent configuration command.
+See Table 8-133 for the encoding of values.
+Note: There is no feedback to the host when an Apply trigger is ignored after failed readiness test (when another configuration is still in progress)
+RO Rqd.
+3-0
+NPConfigStatusLane1
+179
+7-4
+NPConfigStatusLane4
+RO Rqd.
+3-0
+NPConfigStatusLane3
+180
+7-4
+NPConfigStatusLane6
+RO Rqd.
+3-0
+NPConfigStatusLane5
+181
+7-4
+NPConfigStatusLane8
+RO Rqd.
+3-0
+NPConfigStatusLane7
+2
+The status codes in Table 8-133 represent both the current command handling status (in-progress, ready) 3 and the result status information (success, rejection due to validation failure), whereby the ready command 4 handling status is implicitly indicated by the presence of result status information. 5
+Table 8-133 NP Configuration Command Execution and Result Status Codes (Page 16h) 6
+Encoding
+Name
+Value Description
+0h
+ConfigUndefined
+No status information available (initial register value)
+1h
+ConfigSuccess
+Positive Result Status: The last accepted configuration command has been completed successfully
+2h
+ConfigRejected
+Negative Result Status (2h-Bh. Dh-Fh):
+Configuration rejected: unspecific validation failure
+3h
+ConfigRejectedInvalidAppSel
+Configuration rejected: invalid AppSel codes
+4h
+ConfigRejectedInvalidNetworkPath
+Configuration rejected: invalid set of lanes for AppSel
+5h
+-
+Reserved
+6h
+ConfigRejectedLanesInUse
+Configuration rejected: some lanes not in NPDeactivated
+7h
+ConfigRejectedPartialNetworkPath
+Configuration rejected: lanes are only subset of Network Path
+8h
+-
+Reserved (other validation failures)
+9h
+-
+Ah
+-
+Bh
+-
+Ch
+ConfigInProgress
+Execution Status: A configuration command is still being processed by the module; a new configuration command is ignored for this lane while ConfigInProgress.
+Dh
+-
+Custom Configuration rejected for custom reasons
+Eh
+-
+Fh
+-
+7
+OIF-CMIS-05.2
+www.oiforum.com Page 229
+8.15.4 Network Path Status 1
+The Active Control Set represents the currently commissioned NP configuration, except transiently during a 2 reconfiguration when the NPInitPending status is active. 3
+Table 8-134 NP Active Control Set, Network Path Configuration (Page 16h) 4
+Byte
+Bits
+Field Name
+Register Description
+Type
+192
+7-4
+-
+ACS::NPConfigLane1
+See Table 8-125
+RO
+Rqd.
+3-1
+NPIDLane1
+0
+NPInUseLane1
+193
+7-4
+-
+ACS::NPConfigLane2
+See Table 8-125
+RO
+Rqd.
+3-1
+NPIDLane2
+0
+NPInUseLane2
+194
+7-4
+-
+ACS::NPConfigLane3
+See Table 8-125
+RO
+Rqd.
+3-1
+NPIDLane3
+0
+NPInUseLane3
+195
+7-4
+-
+ACS::NPConfigLane4
+See Table 8-125
+RO
+Rqd.
+3-1
+NPIDLane4
+0
+NPInUseLane4
+196
+7-4
+-
+ACS::NPConfigLane5
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane5
+0
+NPInUseLane5
+197
+7-4
+-
+ACS::NPConfigLane6
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane6
+0
+NPInUseLane6
+198
+7-4
+-
+ACS::NPConfigLane7
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane7
+0
+NPInUseLane7
+199
+7-4
+-
+ACS::NPConfigLane8
+See Table 8-125
+RW
+Rqd.
+3-1
+NPIDLane8
+0
+NPInUseLane8
+5
+The current state of the NPSM associated with a host lane (if any) is indicated as follows, using the encoding 6 defined in Table 8-136 7
+Table 8-135 Lane-associated Network Path States (Page 16h) 8
+Byte
+Bit
+Field Name
+Register Description (NPStateHostLane<i>)
+Type
+200
+7-4
+NPStateHostLane2
+Network Path State of host lane 2 (see Table 8-136)
+RO
+Rqd.
+3-0
+NPStateHostLane1
+Network Path State of host lane 1 (see Table 8-136)
+201
+7-4
+NPStateHostLane4
+Network Path State of host lane 4 (see Table 8-136)
+RO
+Rqd.
+3-0
+NPStateHostLane3
+Network Path State of host lane 3 (see Table 8-136)
+202
+7-4
+NPStateHostLane6
+Network Path State of host lane 6 (see Table 8-136)
+RO
+Rqd.
+3-0
+NPStateHostLane5
+Network Path State of host lane 5 (see Table 8-136)
+203
+7-4
+NPStateHostLane8
+Network Path State of host lane 8 (see Table 8-136)
+RO
+Rqd.
+3-0
+NPStateHostLane7
+Network Path State of host lane 7 (see Table 8-136)
+Table 8-136 Network Path State Encoding 9
+Encoding
+State
+0h
+Reserved
+1h
+NPDeactivated (or unused lane)
+2h
+NPInit
+3h
+NPDeinit
+4h
+NPActivated
+5h
+NPTxTurnOn
+6h
+NPTxTurnOff
+7h
+NPInitialized
+8h-Fh
+Reserved
+10
+OIF-CMIS-05.2
+www.oiforum.com Page 230
+Table 8-137 Network Path Conditions (Page 16h) 1
+Byte
+Bits
+Field Name
+Register Description
+Type
+204
+7
+NPInitPendingLane8
+NPInitPendingLane<i>
+0b: NPInit not pending
+1b: Commissioning the NP Active Control Set during NPInit has not yet been executed after a successful ApplyNPInit, hence the NP Active Control Set content may still deviate from the actual hardware configuration.
+Note: The setting SteppedConfigOnly is irrelevant for the NPSM.
+RO Rqd.
+6
+NPInitPendingLane7
+5
+NPInitPendingLane6
+4
+NPInitPendingLane5
+3
+NPInitPendingLane4
+2
+NPInitPendingLane3
+1
+NPInitPendingLane2
+0
+NPInitPendingLane1
+2
+OIF-CMIS-05.2
+www.oiforum.com Page 231
+8.15.5 Network Path Related Advertisements (Capabilities and Restrictions) 1
+8.15.5.1 Maximum Durations Advertisement 2
+The maximum duration of transient NPSM states is advertised by the module as follows 3
+Table 8-138 NPSM Durations Advertising (Page 16h) 4
+Byte
+Bit
+Field Name
+Field Description
+Type
+224
+7-4
+MaxDurationNPDeinit
+Maximum duration of the NPDeinit state
+(encoded as per Table 8-43)
+RO Rqd.
+3-0
+MaxDurationNPInit
+Maximum duration of the NPInit state
+(encoded as per Table 8-43)
+225
+7-4
+MaxDurationNPTxTurnOff
+Encoded maximum duration of the NPTxTurnOff state (see Table 8-43)
+RO Rqd.
+3-0
+MaxDurationNPTxTurnOn
+Encoded maximum duration of the NPTxTurnOn state (see Table 8-43)
+8.15.5.2 Miscellaneous Options 5
+A module advertises if the host can configure a host replacement signal to be forwarded in downstream 6 direction, instead of the (possibly but not necessarily failed) host signal received from an upstream source. 7
+Note: Replacement signal insertion is intended to be used when no host signal is connected to a multiplex 8 connection point of the NP (Tx direction) or when no host signal is expected from a multiplex connection point 9 of the NP (Rx direction), i.e. always when a host signal is known to be intentionally missing or “unequipped”. 10
+Note: It is assumed that the pertinent transmission specifications of an NP application provide transmit and 11 forwarding specifications in case of an upstream host signal failure, such as automatic AIS or LF insertion. 12 Reactive modifications of the data stream, automatically performed by the module, prior to forwarding the data 13 stream are often called “consequent actions”. 14
+Note: When configurable replacement signals are not supported, a deliberately unconnected host signal would 15 be treated by the module as a host signal failure, while supporting configurable replacement signals may allow 16 to distinguish an intentionally unconnected signal from a signal failure leading to consequent actions. 17
+Table 8-139 Miscellaneous Options (Page 16h) 18
+Byte
+Bit
+Field Name
+Field Description
+Type
+226
+7-2
+-
+Reserved
+RO Rqd.
+1
+ReplaceHPSignalTxSupported
+0b: not supported
+1b: Tx replacement signals for NP inputs are supported
+0
+ReplaceHPSignalRxSupported
+0b: not supported
+1b: Rx replacement signals for NP outputs are supported
+19
+8.15.5.3 Application Advertisement Extensions 20
+As an extension to the basic application advertisement described in section 8.2.11 a module supporting NP 21 Applications advertises for each Application Descriptor (identified by its AppSel code) if the advertised applica-22 tion is a DP Application or a NP Application. 23
+This application advertisement extension is necessary for robust distinction of system interface applications 24 (DP Applications) and uniplex applications (NP Applications). 25
+Note: An Application Descriptor for a genuine homogeneous multiplex application can also be recognized from 26 the data rates associated with the MediaInterfaceID and the HostInterfaceID: The number of homogeneously 27 multiplexed Host Paths is the quotient of the larger information rate of the media interface (MediaInterfaceID) 28 and the smaller information rate of the host interface (HostInterfaceID) in the Application Descriptor. 29
+Note: The extension to the Application Descriptor is required (for modules supporting NP Applications) because 30 the distinction of a uniplex NP Application and a DP Application cannot always be derived from the meaning of 31 the advertised MediaInterfaceID, and hence the distinction must be indicated explicitly. 32
+33
+OIF-CMIS-05.2
+www.oiforum.com Page 232
+Table 8-140 NP Extended Application Advertisement (Page 16h) 1
+Byte
+Bits
+Field Name
+Register Description
+Type
+248
+7
+ExtAppDescriptor15
+ExtAppDescriptor<i>
+The Application Descriptor identified by AppSel<i>:
+0b: describes a supported DP Application
+1b: (partially) describes a supported NP Application
+Note: The value is irrelevant when the Application Descriptor identified by AppSel<i> is unused.
+RW
+Rqd.
+6
+ExtAppDescriptor14
+5
+ExtAppDescriptor13
+4
+ExtAppDescriptor12
+3
+ExtAppDescriptor11
+2
+ExtAppDescriptor10
+1
+ExtAppDescriptor9
+0
+ExtAppDescriptor8
+249
+7
+ExtAppDescriptor7
+6
+ExtAppDescriptor6
+5
+ExtAppDescriptor5
+4
+ExtAppDescriptor4
+3
+ExtAppDescriptor3
+2
+ExtAppDescriptor2
+1
+ExtAppDescriptor1
+0
+-
+2
+8.15.5.4 Multiplex and Uniplex Application Advertisement 3
+NP Applications are advertised by one or more Application Descriptors (see Table 8-20, Table 8-52, and Table 4 8-53), each of which indicates a HP type (HostInterfaceID) and the NP type (MediaInterfaceID), together with 5 the Application Descriptor Extensions (see Table 8-140) distinguishing NP Applications and DP Applications. 6
+Uniplex NP and Homogeneous Multiplex Application Advertisement 7
+A uniplex or homogeneous multiplex NP Application is advertised in one Application Descriptor with AppSel=<i> 8 where the associated ExtAppDescriptor<i> bit is set. 9
+Note: One characteristic resulting from a single Application Descriptor being used is that the host lane data 10 rates of all tributaries are identical, simply because they all use the same HostInterfaceID. 11
+Mixed Multiplex NP Application Advertisement 12
+A mixed (heterogenous) multiplex application is advertised via a set of mutually consistent Application 13 Descriptors with all the associated ExtAppDescriptor<i> bits set, together with the additional Mixed Multiplex 14 Descriptor registers (see Table 8-142 and Table 8-143 and section 8.15.5.5). 15
+Application Descriptors are mutually consistent when they all advertise the same MediaInterfaceID with at 16 least one common option in the MediaLaneAssignmentOptions, and when there is at least one combination of 17 HostLaneAssignmentOptions in the Application Descriptors that assigns different host lanes to each of them. 18
+A non-trivial uniform lane data rate restriction for a mixed multiplex application requires that the host 19 lane data rates of all tributaries must be identical. See also subsection 7.6.1.5. 20
+Note: In other words, all tributaries of a multiplex application are multi-lane signals with possibly different 21 number of lanes but with uniform lane data rate. As specified below in section 8.15.5.5, this lane data uniformity 22 requirement extends even across parallel multiplex applications. 23
+Note: The rationale for this apparently undesired restriction is to keep accurate advertising both of capabilities 24 and of restrictions at a reasonable level of advertisement complexity. 25
+8.15.5.5 Constraints and Advertisements for Parallel NP Applications 26
+The uniform lane data rate restriction applies also across parallel multiplexing applications (of any kind). 27
+Note: The rationale for this apparently undesired restriction is to keep accurate advertising both of capabilities 28 and of restrictions, as defined below, at a reasonable level of advertisement complexity. 29
+The ordered list of Host Path lane groups feeding one single Network Path, in lane number order, is called the 30 multiplex structure of the Network Path. 31
+The ordered list of all Host Path lane groups (feeding any of possibly several parallel Network Paths) is called 32 the global multiplex structure. 33
+OIF-CMIS-05.2
+www.oiforum.com Page 233
+The multiplexing granularity of a multiplex structure is defined by a HostInterfaceID value that indicates 1 both the common host lane data rate and the multiplexing rate granularity of a mixed multiplex structure. 2
+A particular global multiplex structure is supported when 3
+• The data rate of each Host Path is a power-of-two multiple of one selected multiplexing granularity 4
+• The information rate of each Network Path is the sum of the information rates of all its Host Paths 5
+• The lane grouping of the host lanes into Host Paths is advertised as supported by the module 6
+Table 8-141 lists all possible lane groupings (global multiplex structures) together with their global multiplex 7 structure encodings (Multiplex Structure IDs) for mixed Host Path widths in a multiplex application. 8
+Table 8-141 also shows the Host Path DPIDs (HP DPIDs) for the Host Paths of a particular global multiplex 9 structure, independent of any NP they belong to. 10
+When parallel Network Paths are supported, the first NP is associated with one or more HPs using a first group 11 of host lanes, and the nth NP is associated with one or more HPs using the nth group of host lanes. 12
+Note. This table has the same hand-crafted structure as Table 8-34, which is not scalable to fewer or more 13 lanes. It is reused here because a look-up table is expected to be used in implementations. The ID numbering 14 (0-25) is different (off by one) because here the multiplex structure ID selects a bit position in a bit mask. 15
+Table 8-141 Multiplex Lane Grouping Advertisement 16
+Multiplex Structure
+HP DPID per Host Lane #
+ID
+# of HPs
+HP Widths
+1
+2
+3
+4
+5
+6
+7
+8
+0
+8
+1, 1, 1, 1, 1, 1, 1, 1
+1
+2
+3
+4
+5
+6
+7
+8
+1
+1
+8 1 1 1 1 1 1 1 1
+2
+2
+4, 4 1 1 1 1 5 5 5 5
+3
+4
+2, 2, 2, 2 1 1 3 3 5 5 7 7
+4
+3
+4, 2, 2 1 1 1 1 5 5 7 7
+5
+4
+4, 2, 1, 1 1 1 1 1 5 5
+7
+8
+6
+4
+4, 1, 1, 2 1 1 1 1
+5
+6 7 7
+7
+5
+4, 1, 1, 1, 1 1 1 1 1
+5
+6
+7
+8
+8
+3
+2, 2, 4 1 1 3 3 5 5 5 5
+9
+4
+2, 1, 1, 4 1 1
+3
+4 5 5 5 5
+10
+4
+1, 1, 2, 4
+1
+2 3 3 5 5 5 5
+11
+4
+1, 1, 1, 1,
+1
+2
+3
+4 5 5 5 5
+12
+5
+2, 2, 2, 1, 1 1 1 3 3 5 5
+7
+8
+13
+5
+2, 2, 1, 1, 2 1 1 3 3
+5
+6 7 7
+14
+5
+2, 1, 1, 2, 2 1 1
+3
+5 5 7 7
+15
+5
+1, 1, 2, 2, 2
+1
+2 3 3 5 5 7 7
+16
+6
+2, 2, 1, 1, 1, 1 1 1 3 3
+5
+6
+7
+8
+17
+6
+2, 1, 1, 2, 1, 1 1 1
+3
+4 5 5
+7
+8
+18
+6
+2, 1, 1, 1, 1, 2 1 1
+3
+4
+5
+6 7 7
+19
+6
+1, 1, 2, 2, 1, 1
+1
+2 3 3 5 5
+7
+8
+20
+6
+1, 1, 2, 1, 1, 2
+1
+2 3 3
+5
+6 7 7
+21
+6
+1, 1, 1, 1, 2, 2
+1
+2
+3
+4 5 5 7 7
+22
+6
+2, 1, 1, 1, 1, 1, 1 1 1
+3
+4
+5
+6
+7
+8
+23
+7
+1, 1, 2, 1, 1, 1, 1
+1
+2 3 3
+5
+6
+7
+8
+24
+7
+1, 1, 1, 1, 2, 1, 1
+1
+2
+3
+4 5 5
+7
+8
+25
+7
+1, 1, 1, 1, 1, 1, 2
+1
+2
+3
+4
+5
+6 7 7
+17
+Based on this coded enumeration of global multiplex structures, the module advertises the supported global 18 multiplex options by a list of up to four Multiplex Descriptors as follows: 19
+OIF-CMIS-05.2
+www.oiforum.com Page 234
+Each Multiplex Descriptor advertises a multiplex granularity MuxGranularity (bandwidth) and a set of 1 supported global multiplex structures MuxStructsSupported for that granularity. 2
+For reasons of access efficiency, the two parts of a Multiplex Descriptor (granularity and list of global multiplex 3 structures) are stored in two separate register arrays, as follows: 4
+Table 8-142 Multiplex Granularities Advertisement (Page 16h) 5
+Byte
+Bits
+Field Name
+Register Description
+Type
+228
+7-0
+MuxGranularity1
+U8 MuxGranularity<i>
+0: Not supported (end of granularity list: after a zero value, all following MuxGranularity<i> fields are zero as well)
+>0: HostInterfaceID indicating the lane data rate and the multiplex rate granularity: all multiplexed signals have the same lane data rate and a data rate that is a power of two multiple of the multiplex rate granularity
+RO
+Rqd.
+229
+7-0
+MuxGranularity2
+230
+7-0
+MuxGranularity3
