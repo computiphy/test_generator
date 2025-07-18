@@ -1,0 +1,142 @@
+[
+  {
+    "name": "initialize_link",
+    "description": "Initializes the communication link for the optical transceiver.",
+    "parameters": [],
+    "examples": ["initialize_link()"],
+    "tags": ["init", "link", "startup"]
+  },
+  {
+    "name": "reset_firmware",
+    "description": "Triggers a firmware reset and waits for completion.",
+    "parameters": [],
+    "examples": ["reset_firmware()"],
+    "tags": ["reset", "firmware", "recovery"]
+  },
+  {
+    "name": "read_register",
+    "description": "Reads the value from a specified firmware register.",
+    "parameters": ["register"],
+    "examples": ["read_register('CONTROL')"],
+    "tags": ["read", "register", "debug"]
+  },
+  {
+    "name": "write_register",
+    "description": "Writes a value to a specified firmware register.",
+    "parameters": ["register", "value"],
+    "examples": ["write_register('CONTROL', 1)"],
+    "tags": ["write", "register", "config"]
+  },
+  {
+    "name": "validate_register",
+    "description": "Validates that a register contains the expected value.",
+    "parameters": ["register", "expected_value"],
+    "examples": ["validate_register('CTRL_STATUS', 0x01)"],
+    "tags": ["validate", "register", "check"]
+  },
+  {
+    "name": "monitor_link_status",
+    "description": "Checks if the communication link becomes active within the timeout.",
+    "parameters": ["timeout_ms"],
+    "examples": ["monitor_link_status(5000)"],
+    "tags": ["monitor", "link", "status"]
+  },
+  {
+    "name": "inject_error_signal",
+    "description": "Injects a fault signal into the specified channel for stress testing.",
+    "parameters": ["channel"],
+    "examples": ["inject_error_signal(1)"],
+    "tags": ["inject", "error", "fault", "stress"]
+  },
+  {
+    "name": "check_alarm_state",
+    "description": "Checks whether a specified alarm condition is active.",
+    "parameters": ["alarm_type"],
+    "examples": ["check_alarm_state('LOS')"],
+    "tags": ["alarm", "check", "error"]
+  },
+  {
+    "name": "clear_error_logs",
+    "description": "Clears all system error logs.",
+    "parameters": [],
+    "examples": ["clear_error_logs()"],
+    "tags": ["error", "clear", "log"]
+  },
+  {
+    "name": "retrieve_performance_metrics",
+    "description": "Returns a dictionary of current performance metrics.",
+    "parameters": [],
+    "examples": ["metrics = retrieve_performance_metrics()"],
+    "tags": ["metrics", "performance", "read"]
+  },
+  {
+    "name": "compare_metrics_against_thresholds",
+    "description": "Compares runtime metrics against defined threshold values.",
+    "parameters": ["metrics", "thresholds"],
+    "examples": ["compare_metrics_against_thresholds(metrics, thresholds)"],
+    "tags": ["metrics", "compare", "threshold"]
+  },
+  {
+    "name": "perform_soft_reset",
+    "description": "Performs a soft reset without powering down the system.",
+    "parameters": [],
+    "examples": ["perform_soft_reset()"],
+    "tags": ["reset", "soft", "recovery"]
+  },
+  {
+    "name": "validate_state_transition",
+    "description": "Checks if the firmware state transition is as expected.",
+    "parameters": ["current", "expected"],
+    "examples": ["validate_state_transition('INIT', 'READY')"],
+    "tags": ["validate", "state", "transition"]
+  },
+  {
+    "name": "simulate_power_cycle",
+    "description": "Simulates a power-off and power-on cycle on the firmware.",
+    "parameters": [],
+    "examples": ["simulate_power_cycle()"],
+    "tags": ["simulate", "power", "cycle", "reset"]
+  },
+  {
+    "name": "authenticate_user",
+    "description": "Simulates user authentication for role-based access testing.",
+    "parameters": ["role", "password"],
+    "examples": ["authenticate_user('admin', 'pass123')"],
+    "tags": ["auth", "user", "access", "security"]
+  },
+  {
+    "name": "apply_configuration",
+    "description": "Applies a predefined configuration profile to the firmware.",
+    "parameters": ["profile_name"],
+    "examples": ["apply_configuration('baseline')"],
+    "tags": ["config", "apply", "profile"]
+  },
+  {
+    "name": "verify_crc_integrity",
+    "description": "Verifies CRC checksum of a given data frame.",
+    "parameters": ["frame"],
+    "examples": ["verify_crc_integrity(frame_bytes)"],
+    "tags": ["crc", "verify", "frame"]
+  },
+  {
+    "name": "log_debug_message",
+    "description": "Logs a debug message to the test system.",
+    "parameters": ["message"],
+    "examples": ["log_debug_message('Init completed')"],
+    "tags": ["log", "debug", "message"]
+  },
+  {
+    "name": "delay_ms",
+    "description": "Introduces a millisecond-level delay in test execution.",
+    "parameters": ["ms"],
+    "examples": ["delay_ms(100)"],
+    "tags": ["delay", "timing", "wait"]
+  },
+  {
+    "name": "wait_for_state",
+    "description": "Waits for the firmware to reach a specific state within a timeout.",
+    "parameters": ["state", "timeout"],
+    "examples": ["wait_for_state('READY', 3000)"],
+    "tags": ["wait", "state", "timeout"]
+  }
+]

@@ -1,0 +1,34 @@
+Test Case Number,Test Case Title,Test Case Description,Test Steps,Priority,Type
+1,Verify Negative Response for Invalid Command,Check if the device responds negatively to an invalid command.,"Send a command that is not recognized by the device.
+Observe the response from the device.",Medium,Negative
+2,Ensure Correct Observables Return with Requested PM Record Length,Verify that the correct PM records are returned based on the requested record length.,"Request a specific number of PM records from one observable.
+Observe and compare the returned data with expected results.",Low,Positive
+3,Validate Observables Return as Expected When All Bits Set in Observables Field,Ensure all requested observables are correctly returned.,"Set the Observables field to include all available observables for one lane.
+Verify that all observable data is returned.",Medium,Positive
+4,Check Performance When Handling Multiple Concurrent Requests,Evaluate the system's ability to handle multiple concurrent requests without performance degradation.,"Simulate sending multiple requests simultaneously.
+Measure response time and system load.",High,Performance
+5,Verify Non-Functional Requirements for Command Execution Time,"Ensure command execution times meet non-functional requirements (e.g., no delays longer than 10ms).","Send a series of commands and measure their execution time.
+Check if all commands execute within the specified limit.",Medium,Non-functional
+6,Test Error Handling for Invalid Data Transmission,Check if the device can handle invalid data transmissions and respond appropriately.,"Send a transmission with incorrect data format.
+Observe the response from the device.",Low,Negative
+7,Validate Observables Return for Multiple Lanes with Different Observables Set,Ensure that observables for multiple lanes are correctly returned.,"Request observables for multiple lanes, including different sets of observables for each lane.
+Verify the data is returned as expected.",Medium,Positive
+8,Check Non-Functional Requirements for Memory Usage,"Ensure memory usage does not exceed specified limits (e.g., no more than 50% of available memory used).","Monitor memory usage during device operation.
+Check if the memory usage stays within acceptable bounds.",High,Non-functional
+9,Verify Correct Handling of Observed Data in Real-Time,Ensure observed data is handled correctly and updated in real-time.,Observe the device's ability to update observable data dynamically.,Medium,Positive
+10,Test Error Handling for Invalid Response from Device,Check if the system can handle invalid responses from the device and respond appropriately.,"Simulate an error response from the device.
+Observe the system's behavior.",Low,Negative
+11,Validate Observables Return with Multiple Observables Set in Request,Ensure that multiple observables are correctly returned for one lane.,"Request observables for one lane including multiple sets of observables.
+Verify the data is returned as expected.",Medium,Positive
+12,Check Non-Functional Requirements for CPU Utilization,"Ensure CPU utilization does not exceed specified limits (e.g., no more than 80% of available CPU used).","Monitor CPU usage during device operation.
+Check if the CPU usage stays within acceptable bounds.",High,Non-functional
+13,Verify Correct Handling of Command Sequence,Ensure that commands are handled correctly in sequence without errors.,Send multiple commands sequentially and observe their execution.,Medium,Positive
+14,Test Error Handling for Invalid Observable Request,Check if the system can handle invalid observable requests and respond appropriately.,"Request an observable that is not available on the device.
+Observe the system's behavior.",Low,Negative
+15,Validate Observables Return for Multiple Lanes with Different PM Record Lengths Set,"Ensure that observables are returned correctly across multiple lanes, considering different PM record lengths.","Request observables for multiple lanes, each with a different set of observables and PM record lengths.
+Verify the data is returned as expected.",Medium,Positive
+16,Check Non-Functional Requirements for Data Integrity,Ensure that transmitted data is error-free and not corrupted during transmission.,"Simulate a scenario where data might be corrupted in transit.
+Verify if the device handles such errors appropriately.",High,Non-functional
+17,Verify Correct Handling of Command Priorities,Ensure that commands are handled correctly based on their priority.,Send multiple commands with different priorities and observe their execution.,Medium,Positive
+18,Test Error Handling for Invalid Lane Request,Check if the system can handle invalid lane requests and respond appropriately.,"Request an observable from a non-existent lane on the device.
+Observe the system's behavior.",Low,Negative

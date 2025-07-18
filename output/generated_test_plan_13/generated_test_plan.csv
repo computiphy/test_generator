@@ -1,0 +1,62 @@
+Test Case Number,Test Case Title,Test Case Description,Test Steps,Priority,Type
+1,Verify Correct Data Length Returned Using LPL,Ensure that the returned PM data matches the expected length and format when using LPL.,"Configure device to return PM data using LPL with a specific observable set.
+Send request to device for PM data.
+Check received data length and verify it is consistent with the number of observable bits set in the request.
+Parse received data and validate that the format matches expected (6 or 8 bytes per record, X16 minimum/average/max/current value).",Medium,Functional
+2,Handle Request for Maximum Number of Records Using LPL,Ensure that the device returns all available PM records when requesting a maximum number.,"Configure device to return up to 15 records using LPL with multiple observable bits set.
+Send request to device for PM data with the maximum number of records requested.
+Verify that the received data length matches the total number of available records (up to 15).
+Parse received data and validate that all records are present, with valid values.",Medium,Functional
+3,Verify Correct Data Format Returned Using EPL,Ensure that the returned PM data matches the expected format when using EPL.,"Configure device to return PM data using EPL with a specific observable set.
+Send request to device for PM data.
+Check received data length and verify it is consistent with the number of observable bits set in the request.
+Parse received data and validate that each record has 6 or 8 bytes (X16 minimum/average/max/current value).",Medium,Functional
+4,Handle Request for Maximum Number of Records Using EPL,Ensure that the device returns all available PM records when requesting a maximum number.,"Configure device to return up to 100 records using EPL with multiple observable bits set.
+Send request to device for PM data with the maximum number of records requested.
+Verify that the received data length matches the total number of available records (up to 100).
+Parse received data and validate that all records are present, with valid values.",Medium,Functional
+5,Validate Data Integrity Using LPL,Ensure that the PM data integrity is maintained when using LPL.,"Configure device to return PM data using LPL with a specific observable set.
+Send request to device for PM data and receive data.
+Modify received data (e.g., swap values) and send modified data back.
+Verify that the device rejects or handles the modified data correctly.",Medium,Functional
+6,Validate Data Integrity Using EPL,Ensure that the PM data integrity is maintained when using EPL.,"Configure device to return PM data using EPL with a specific observable set.
+Send request to device for PM data and receive data.
+Modify received data (e.g., swap values) and send modified data back.
+Verify that the device rejects or handles the modified data correctly.",Medium,Functional
+7,Verify Data Handling with Large Number of Observables,Ensure that the device can handle and return PM data for a large number of observables.,"Configure device to return PM data using LPL with 20 observable bits set.
+Send request to device for PM data.
+Verify that the received data length matches the total number of available records (up to 15).
+Parse received data and validate that all records are present, with valid values.",Medium,Functional
+8,Verify Data Handling with Small Number of Observables,Ensure that the device can handle and return PM data for a small number of observables.,"Configure device to return PM data using LPL with 5 observable bits set.
+Send request to device for PM data.
+Verify that the received data length matches the total number of available records (up to 5).
+Parse received data and validate that all records are present, with valid values.",Medium,Functional
+9,Check Error Handling for Invalid Observable Requests,Ensure that the device handles invalid observable requests correctly.,"Send request to device with an invalid or non-existent observable bit set.
+Verify that the device returns an error response (e.g., status code 400).
+Check error message for expected content indicating invalid observable.",Medium,Functional
+10,Validate EPL Data Format with Multiple Observables,Ensure that the returned EPL data matches the expected format when using multiple observables.,"Configure device to return PM data using EPL with 3 observable bits set.
+Send request to device for PM data.
+Verify that received data contains multiple records, each consisting of 6 or 8 bytes (X16 minimum/average/max/current value).
+Parse and validate each record's content.",Medium,Functional
+11,Handle Large Data Request Using LPL,Ensure that the device can handle and return PM data for a large number of records when using LPL.,"Configure device to return up to 120 records using LPL with multiple observable bits set.
+Send request to device for PM data with the maximum number of records requested.
+Verify that the received data length matches the total number of available records (up to 120).
+Parse received data and validate that all records are present, with valid values.",Medium,Functional
+12,Check Error Handling for Large Data Request Using EPL,Ensure that the device handles large data requests using EPL correctly.,"Send request to device with a large number of records using EPL (e.g., 100 records).
+Verify that the device returns an error response (e.g., status code 400).
+Check error message for expected content indicating limitations on EPL data size.",Medium,Functional
+13,Validate Data Handling with Zero Observable Bits Set,Ensure that the device returns no PM data when zero observable bits are set.,"Configure device to return PM data using LPL with zero observable bits set.
+Send request to device for PM data.
+Verify that the received data length is zero (no records returned).
+Check for any error messages or responses.",Medium,Functional
+14,Handle Request with Invalid EPL Page Configuration,Ensure that the device handles requests with invalid or non-existent EPL pages correctly.,"Send request to device with an invalid or non-existent EPL page configuration.
+Verify that the device returns an error response (e.g., status code 400).
+Check error message for expected content indicating invalid EPL page.",Medium,Functional
+15,Validate Data Integrity with Large Observables,Ensure that the device maintains data integrity when handling large numbers of observables.,"Configure device to return PM data using LPL with 15 observable bits set.
+Send request to device for PM data and receive data.
+Modify received data (e.g., swap values) and send modified data back.
+Verify that the device rejects or handles the modified data correctly.",Medium,Functional
+16,Validate EPL Data Format with Large Observables,Ensure that the returned EPL data matches the expected format when using large numbers of observables.,"Configure device to return PM data using EPL with 10 observable bits set.
+Send request to device for PM data and receive data.
+Verify that received data contains multiple records, each consisting of 6 or 8 bytes (X16 minimum/average/max/current value).
+Parse and validate each record's content.",Medium,Functional
