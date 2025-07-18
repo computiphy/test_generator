@@ -1,0 +1,9 @@
+{
+  "ollama": {
+    "host": "http://127.0.0.1:11434",
+    "model_name": "qwen2.5-coder:3b"
+  },
+  "defaults": {
+    "num_of_tests": 20
+  }
+}
